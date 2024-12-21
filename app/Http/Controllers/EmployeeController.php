@@ -8,6 +8,8 @@ use App\Http\Requests\HRCreateRequest;
 use App\Models\Employee;
 use App\Models\HR;
 use App\Models\NewHire;
+use App\Models\Schedule;
+use App\Models\DayOff;
 use App\Models\Probation;
 use App\Models\Resignation;
 use App\Models\Announcement;
@@ -139,7 +141,7 @@ class EmployeeController extends Controller
             $prob->save();
         }
 
-        return redirect(route("hr.index"))->with('success', 'Created Successfully');
+        return redirect(route("employee.index"))->with('success', 'Created Successfully');
     }
 
     /**
@@ -285,5 +287,64 @@ class EmployeeController extends Controller
 
         return redirect(route("hr.index"))->with('success', 'Created Successfully');
     }
+
+    public function schedule()
+    {
+        abort_unless(Gate::allows('hr_access'), 404);
+        $schedules = Schedule::with('employee', 'employee.dayoffs')->get();
+
+        return view('pages.hr.employee.schedule.index', compact('schedules'));
+    }
+
+    public function scheduleadd(Request $request)
+    {
+        abort_unless(Gate::allows('hr_access'), 404);
+        $employees = Employee::all();
+
+
+        return view('pages.hr.employee.schedule.add.index', compact('employees'));
+    }
+
+    public function schedulestore(Request $request)
+    {
+        abort_unless(Gate::allows('hr_access'), 404);
+        $request->validate([ 
+            'employee_name' => 'required', 
+            'day_of_week' => 'required|array', 
+            'shift' => 'nullable', 
+            'day_of_week.*' => 'required|string',
+            'day_off' => 'nullable|array', 
+            'day_off.*' => 'nullable|string'
+        ]);
+
+        foreach ($request->day_of_week as $day) {
+            Schedule::create([
+                'employee_id' => $request->employee_name, 
+                'day_of_week' => $day, 
+                'shift' => $request->shift, 
+            ]); 
+
+        }
+
+        if (!empty($request->day_off)) { 
+            foreach ($request->day_off as $day) { 
+                DayOff::create([ 
+                    'employee_id' => $request->employee_name, 
+                    'day_of_week' => $day, 
+                ]); 
+            } 
+        }
+
+        return redirect(route("schedule.index"))->with('success', 'Created Successfully');
+    }
+
+    public function scheduleshow(Schedule $schedule) 
+    { 
+        $employees = Employee::all(); 
+        
+        return view('pages.hr.employee.schedule.show.index', compact('schedule', 'employees')); 
+    }
+
+
 
 }

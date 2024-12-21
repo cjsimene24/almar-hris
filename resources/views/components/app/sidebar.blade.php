@@ -51,9 +51,9 @@
                             </a>
                         </li>
 
-                        <li class="px-3 py-3 rounded-sm mb-0.5 last:mb-0 bg-[linear-gradient(135deg,var(--tw-gradient-stops))] @if (in_array(Request::segment(1), ['employee', 'employee-add', 'bm-probation', 'new-hire', 'resignation'])) {{ 'from-violet-500/[0.12] dark:from-violet-500/[0.24] to-violet-500/[0.04]' }} @endif"
+                        <li class="px-3 py-3 rounded-sm mb-0.5 last:mb-0 bg-[linear-gradient(135deg,var(--tw-gradient-stops))] @if (in_array(Request::segment(1), ['employee', 'employee-add', 'bm-probation', 'new-hire', 'resignation', 'schedule',])) {{ 'from-violet-500/[0.12] dark:from-violet-500/[0.24] to-violet-500/[0.04]' }} @endif"
                             x-data="{ open: {{ in_array(Request::segment(1), ['employee', 'employee-add', 'bm-probation', 'new-hire', 'resignation']) ? 1 : 0 }} }">
-                            <a class="block text-slate-200 hover:text-white truncate transition duration-150 @if (!in_array(Request::segment(1), ['employee', 'employee-add', 'bm-probation', 'new-hire', 'resignation'])) {{ 'hover:text-gray-900 dark:hover:text-white' }} @endif"
+                            <a class="block text-slate-200 hover:text-white truncate transition duration-150 @if (!in_array(Request::segment(1), ['employee', 'employee-add', 'bm-probation', 'new-hire', 'resignation', 'schedule',])) {{ 'hover:text-gray-900 dark:hover:text-white' }} @endif"
                                 href="#0" @click.prevent="open = !open; sidebarExpanded = true">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center">
@@ -77,16 +77,24 @@
                                 </div>
                             </a>
                             <div class="lg:hidden lg:sidebar-expanded:block 2xl:block">
-                                <ul class="pl-10 mt-1 @if (!in_array(Request::segment(1), ['employee', 'employee-add', 'bm-probation', 'new-hire', 'resignation'])) {{ 'hidden' }} @endif"
+                                <ul class="pl-10 mt-1 @if (!in_array(Request::segment(1), ['employee', 'employee-add', 'bm-probation', 'new-hire', 'resignation', 'schedule',])) {{ 'hidden' }} @endif"
                                     :class="open ? '!block' : 'hidden'">
                                     <li class="mb-1 last:mb-0">
+                                        <a class="block text-white hover:text-gray-700 dark:hover:text-gray-200 transition truncate @if (Route::is('employee.index')) {{ '!text-violet-500' }} @endif"
+                                            href="{{ route('employee.index') }}">
+                                            <span
+                                                class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                                                Employee Lists</span>
+                                        </a>
+                                    </li>
+                                    <!-- <li class="mb-1 last:mb-0">
                                         <a class="block text-white hover:text-gray-700 dark:hover:text-gray-200 transition truncate @if (Route::is('employee.add')) {{ '!text-violet-500' }} @endif"
                                             href="{{ route('employee.add') }}">
                                             <span
                                                 class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">Add
                                                 Employee</span>
                                         </a>
-                                    </li>
+                                    </li> -->
                                     <li class="mb-1 last:mb-0">
                                         <a class="block text-white hover:text-gray-700 dark:hover:text-gray-200 transition truncate @if (Route::is('bmprobation.index')) {{ '!text-violet-500' }} @endif"
                                             href="{{ route('bmprobation.index') }}">
@@ -109,6 +117,13 @@
                                                 class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">Resignation</span>
                                             <span
                                                 class="inline-flex items-center justify-center w-3 h-3 p-3 ms-6 text-sm font-semibold text-red-700 bg-red-200 rounded-full">2</span>
+                                        </a>
+                                    </li>
+                                    <li class="mb-1 last:mb-0">
+                                        <a class="block text-white hover:text-gray-700 dark:hover:text-gray-200 transition truncate @if (Route::is('schedule.index')) {{ '!text-violet-500' }} @endif"
+                                            href="{{ route('schedule.index') }}">
+                                            <span
+                                                class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">Schedule</span>
                                         </a>
                                     </li>
                                 </ul>
